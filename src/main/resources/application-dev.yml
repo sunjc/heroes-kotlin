@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  datasource:
+    platform: h2
+    initialization-mode: always
+server:
+  port: 8080
+security:
+  cors:
+    allowed-origins: "*"

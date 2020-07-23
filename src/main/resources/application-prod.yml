@@ -1,0 +1,33 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: heroes
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+  datasource:
+    platform: postgresql
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: hero
+    password: ENC(LL8xHWiEdH52yho0ADQ9/h5RsOa3txOFs+GcLtcdrLa2ke4JJ9UpZbKF/r13BIz3)
+    initialization-mode: never
+server:
+  port: 8000
+security:
+  cors:
+    allowed-origins: itrunner.io
+jasypt:
+  encryptor:
+    algorithm: PBEWITHHMACSHA512ANDAES_256
+    password: 1qefhQH7mRR4LADVettR
+    stringOutputType: base64
+    property:
+      prefix: ENC(
+      suffix: )

@@ -1,0 +1,66 @@
+spring:
+  profiles:
+    active: @profile@
+  banner:
+    charset: utf-8
+    image:
+      location: classpath:banner.jpg
+    location: classpath:banner.txt
+  messages:
+    encoding: UTF-8
+    basename: messages
+  resources:
+    add-mappings: true
+
+management:
+  server:
+    port: 8090
+    address: 127.0.0.1
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: env,health,info,mappings
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+info:
+  app:
+    name: heroes
+    version: 1.0
+    encoding: UTF-8
+    java:
+     source: 11
+     target: 11
+
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs
+      title: Api Documentation
+      description: Api Documentation
+      version: 1.0
+      base-package: io.itrunner.heroes.controller
+      api-path: /api/.*
+      contact:
+        name: Jason
+        url: http://blog.51cto.com/7308310
+        email: sjc-925@163.com
+
+api:
+  base-path: /api
+
+security:
+  ignore-paths: /api-docs,/swagger-resources/**,/swagger-ui.html**,/webjars/**
+  auth-path: /api/auth
+  cors:
+    allowed-origins: "*"
+    allowed-methods: GET,POST,DELETE,PUT,OPTIONS
+    allowed-headers: Accept,Accept-Encoding,Accept-Language,Authorization,Connection,Content-Type,Host,Origin,Referer,User-Agent,X-Requested-With
+  jwt:
+    header: Authorization
+    secret: mySecret
+    expiration: 7200
+    issuer: iTRunner
