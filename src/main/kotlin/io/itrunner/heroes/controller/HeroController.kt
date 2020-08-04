@@ -23,7 +23,7 @@ class HeroController(private val service: HeroService, private val messages: Mes
 
     @ApiOperation("Get hero by id")
     @GetMapping("/{id}")
-    fun getHeroById(@ApiParam(required = true, example = "1") @PathVariable("id") id: Long) =
+    fun getHero(@ApiParam(required = true, example = "1") @PathVariable("id") id: Long) =
         service.getHeroById(id) ?: throw HeroNotFoundException(messages.getMessage("hero.notFound", arrayOf(id)))
 
     @ApiOperation("Get all heroes")
