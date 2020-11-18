@@ -26,7 +26,7 @@ class HeroServiceTests {
 
     @BeforeEach
     fun setup() {
-        val heroes: MutableList<Hero> = ArrayList<Hero>()
+        val heroes: MutableList<Hero> = ArrayList()
         heroes.add(Hero("Rogue", id = 1))
         heroes.add(Hero("Jason", id = 2))
         every { heroRepository.findByIdOrNull(1) } returns heroes[0]

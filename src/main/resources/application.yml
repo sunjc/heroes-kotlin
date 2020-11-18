@@ -1,16 +1,11 @@
 spring:
   profiles:
     active: @profile@
-  banner:
-    charset: utf-8
-    image:
-      location: classpath:banner.jpg
-    location: classpath:banner.txt
   messages:
     encoding: UTF-8
     basename: messages
-  resources:
-    add-mappings: true
+  jpa:
+    open-in-view: false
 
 management:
   server:
@@ -31,14 +26,15 @@ info:
     version: 1.0
     encoding: UTF-8
     java:
-     source: 11
-     target: 11
+      source: 11
+      target: 11
 
 springfox:
   documentation:
+    enabled: true
+    open-api:
+      enabled: true
     swagger:
-      v2:
-        path: /api-docs
       title: Api Documentation
       description: Api Documentation
       version: 1.0
@@ -53,7 +49,7 @@ api:
   base-path: /api
 
 security:
-  ignore-paths: /api-docs,/swagger-resources/**,/swagger-ui.html**,/webjars/**
+  ignore-paths: /v3/api-docs,/swagger-resources/**,/swagger-ui/**,/webjars/**
   auth-path: /api/auth
   cors:
     allowed-origins: "*"
