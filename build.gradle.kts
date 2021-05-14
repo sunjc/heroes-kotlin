@@ -18,9 +18,7 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 val profile: String? by project
 
 repositories {
-    maven {
-        url = uri("http://192.168.0.253/nexus/repository/maven-public")
-    }
+    mavenCentral()
 }
 
 dependencies {
