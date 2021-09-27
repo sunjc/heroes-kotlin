@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -42,7 +41,7 @@ class WebSecurityConfig(
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(userDetailsService)
+        auth.userDetailsService(userDetailsService).passwordEncoder(BCryptPasswordEncoder())
     }
 
     override fun configure(http: HttpSecurity) {
@@ -50,17 +49,14 @@ class WebSecurityConfig(
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and() // don't create session
             .authorizeRequests()
-            .requestMatchers(EndpointRequest.to(*actuatorExposures))
-            .permitAll()
-            .antMatchers(securityProperties.authPath).permitAll()
+            .requestMatchers(EndpointRequest.to(*actuatorExposures)).permitAll()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .antMatchers(HttpMethod.POST, apiPath).hasRole(roleAdmin)
             .antMatchers(HttpMethod.PUT, apiPath).hasRole(roleAdmin)
             .antMatchers(HttpMethod.DELETE, apiPath).hasRole(roleAdmin)
             .anyRequest().authenticated().and()
             .addFilterBefore(
-                authenticationTokenFilterBean(),
-                UsernamePasswordAuthenticationFilter::class.java
+                authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter::class.java
             ) // Custom JWT based security filter
             .headers().cacheControl() // disable page caching
     }
@@ -70,9 +66,6 @@ class WebSecurityConfig(
 
     @Bean
     fun authenticationTokenFilterBean() = AuthenticationTokenFilter()
-
-    @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {

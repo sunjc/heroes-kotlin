@@ -1,58 +1,35 @@
 package io.itrunner.heroes.config
 
-import com.fasterxml.classmate.TypeResolver
-import io.itrunner.heroes.exception.ErrorMessage
+import io.swagger.v3.oas.models.Components
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.info.Contact
+import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.security.SecurityRequirement
+import io.swagger.v3.oas.models.security.SecurityScheme
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.ResponseEntity
-import springfox.documentation.builders.ApiInfoBuilder
-import springfox.documentation.builders.PathSelectors
-import springfox.documentation.builders.RequestHandlerSelectors
-import springfox.documentation.oas.annotations.EnableOpenApi
-import springfox.documentation.service.*
-import springfox.documentation.spi.DocumentationType
-import springfox.documentation.spi.service.contexts.SecurityContext
-import springfox.documentation.spring.web.plugins.Docket
-import java.time.LocalDate
 
-@EnableOpenApi
 @Configuration
-class SwaggerConfig(private val properties: SwaggerProperties) {
+class SwaggerConfig(private val info: SwaggerInfoProperties) {
+    private val scheme = "bearer"
+    private val securitySchemeName = "bearerAuth"
+    private val bearerFormat = "JWT"
 
     @Bean
-    fun petApi(): Docket {
-        return Docket(DocumentationType.OAS_30)
-            .select()
-            .apis(RequestHandlerSelectors.basePackage(properties.basePackage))
-            .paths(PathSelectors.any())
-            .build()
-            .apiInfo(apiInfo())
-            .pathMapping("/")
-            .directModelSubstitute(LocalDate::class.java, String::class.java)
-            .genericModelSubstitutes(ResponseEntity::class.java)
-            .additionalModels(TypeResolver().resolve(ErrorMessage::class.java))
-            .securitySchemes(listOf(authenticationScheme()))
-            .securityContexts(listOf(securityContext()))
-            .enableUrlTemplating(false)
-    }
+    fun customOpenAPI(): OpenAPI =
+        OpenAPI().addSecurityItem(securityRequirement()).components(securityComponents()).info(info())
 
-    private fun apiInfo(): ApiInfo = ApiInfoBuilder()
-        .title(properties.title)
-        .description(properties.description)
-        .contact(Contact(properties.contact.name, properties.contact.url, properties.contact.email))
-        .version(properties.version)
-        .build()
+    private fun securityRequirement(): SecurityRequirement = SecurityRequirement().addList(securitySchemeName)
 
-    private fun authenticationScheme(): HttpAuthenticationScheme =
-        HttpAuthenticationScheme.JWT_BEARER_BUILDER.name("BearerToken").build()
+    private fun securityComponents(): Components = Components().addSecuritySchemes(
+        securitySchemeName,
+        SecurityScheme().type(SecurityScheme.Type.HTTP).scheme(scheme).bearerFormat(bearerFormat)
+    )
 
-    private fun securityContext(): SecurityContext = SecurityContext.builder()
-        .securityReferences(defaultAuth())
-        .operationSelector { context -> context.requestMappingPattern().startsWith(properties.apiPath) }
-        .build()
-
-    private fun defaultAuth(): List<SecurityReference> {
-        val authorizationScopes = arrayOf(AuthorizationScope("global", "accessEverything"))
-        return listOf(SecurityReference("BearerToken", authorizationScopes))
-    }
+    private fun info(): Info = Info()
+        .title(info.title)
+        .description(info.description)
+        .termsOfService(info.termsOfService)
+        .contact(Contact().name(info.contact.name).url(info.contact.url).email(info.contact.email))
+        .version(info.version)
 }

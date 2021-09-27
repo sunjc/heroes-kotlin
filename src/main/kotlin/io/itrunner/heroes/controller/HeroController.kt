@@ -4,47 +4,47 @@ import io.itrunner.heroes.dto.HeroDto
 import io.itrunner.heroes.exception.HeroNotFoundException
 import io.itrunner.heroes.extension.Messages
 import io.itrunner.heroes.service.HeroService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.api.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.SortDefault
 import org.springframework.data.web.SortDefault.SortDefaults
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
-import springfox.documentation.annotations.ApiIgnore
 import javax.validation.Valid
 
 @RestController
 @RequestMapping(value = ["/api/heroes"], produces = [MediaType.APPLICATION_JSON_VALUE])
-@Api(tags = ["Hero Controller"])
+@Tag(name = "Hero Controller")
 class HeroController(private val service: HeroService, private val messages: Messages) {
 
-    @ApiOperation("Get hero by id")
+    @Operation(summary = "Get hero by id")
     @GetMapping("/{id}")
-    fun getHero(@ApiParam(required = true, example = "1") @PathVariable("id") id: Long) =
+    fun getHero(@Parameter(required = true, example = "1") @PathVariable("id") id: Long) =
         service.getHeroById(id) ?: throw HeroNotFoundException(messages.getMessage("hero.notFound", arrayOf(id)))
 
-    @ApiOperation("Get all heroes")
+    @Operation(summary = "Get all heroes")
     @GetMapping
     fun getHeroes(
-        @ApiIgnore @SortDefaults(SortDefault(sort = ["name"], direction = Sort.Direction.ASC)) pageable: Pageable
+        @SortDefaults(SortDefault(sort = ["name"], direction = Sort.Direction.ASC)) @ParameterObject pageable: Pageable
     ) = service.getAllHeroes(pageable)
 
-    @ApiOperation("Search heroes by name")
+    @Operation(summary = "Search heroes by name")
     @GetMapping("/")
-    fun searchHeroes(@ApiParam(required = true) @RequestParam("name") name: String) = service.findHeroesByName(name)
+    fun searchHeroes(@Parameter(required = true) @RequestParam("name") name: String) = service.findHeroesByName(name)
 
-    @ApiOperation("Add new hero")
+    @Operation(summary = "Add new hero")
     @PostMapping
-    fun addHero(@ApiParam(required = true) @Valid @RequestBody hero: HeroDto) = service.saveHero(hero)
+    fun addHero(@Parameter(required = true) @Valid @RequestBody hero: HeroDto) = service.saveHero(hero)
 
-    @ApiOperation("Update hero info")
+    @Operation(summary = "Update hero")
     @PutMapping
-    fun updateHero(@ApiParam(required = true) @Valid @RequestBody hero: HeroDto) = service.saveHero(hero)
+    fun updateHero(@Parameter(required = true) @Valid @RequestBody hero: HeroDto) = service.saveHero(hero)
 
-    @ApiOperation("Delete hero by id")
+    @Operation(summary = "Delete hero by id")
     @DeleteMapping("/{id}")
-    fun deleteHero(@ApiParam(required = true, example = "1") @PathVariable("id") id: Long) = service.deleteHero(id)
+    fun deleteHero(@Parameter(required = true, example = "1") @PathVariable("id") id: Long) = service.deleteHero(id)
 }

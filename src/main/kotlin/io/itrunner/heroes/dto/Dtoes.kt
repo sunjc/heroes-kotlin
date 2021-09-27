@@ -1,11 +1,11 @@
 package io.itrunner.heroes.dto
 
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
 data class HeroDto(
-    @ApiModelProperty(value = "name", example = "Jason", required = true)
+    @Schema(name = "name", example = "Jason", required = true)
     @field:[NotBlank Size(min = 3, max = 30)]
     val name: String = "",
 
@@ -13,11 +13,11 @@ data class HeroDto(
 )
 
 data class AuthenticationRequest(
-    @ApiModelProperty(value = "username", example = "admin", required = true)
+    @Schema(name = "username", example = "admin", required = true)
     @field: NotBlank
     val username: String = "",
 
-    @ApiModelProperty(value = "password", example = "admin", required = true)
+    @Schema(name = "password", example = "admin", required = true)
     @field: NotBlank
     val password: String = ""
 )

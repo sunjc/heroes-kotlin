@@ -1,7 +1,7 @@
 package io.itrunner.heroes
 
 import io.itrunner.heroes.config.SecurityProperties
-import io.itrunner.heroes.config.SwaggerProperties
+import io.itrunner.heroes.config.SwaggerInfoProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableJpaRepositories("io.itrunner.heroes.repository")
-@EnableConfigurationProperties(SwaggerProperties::class, SecurityProperties::class)
+@EnableConfigurationProperties(SwaggerInfoProperties::class, SecurityProperties::class)
 @EntityScan(basePackages = ["io.itrunner.heroes.entity"])
 class HeroesApplication
 

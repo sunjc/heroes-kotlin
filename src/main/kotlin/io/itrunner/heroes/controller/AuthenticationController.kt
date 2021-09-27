@@ -3,7 +3,7 @@ package io.itrunner.heroes.controller
 import io.itrunner.heroes.dto.AuthenticationRequest
 import io.itrunner.heroes.dto.AuthenticationResponse
 import io.itrunner.heroes.service.JwtService
-import io.swagger.annotations.Api
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -18,7 +18,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping(value = ["/api/auth"], produces = [MediaType.APPLICATION_JSON_VALUE])
-@Api(tags = ["Authentication Controller"])
+@Tag(name = "Authentication Controller")
 class AuthenticationController(
     private val authenticationManager: AuthenticationManager,
     private val jwtService: JwtService
