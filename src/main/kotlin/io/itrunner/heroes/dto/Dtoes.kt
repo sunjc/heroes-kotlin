@@ -10,9 +10,9 @@ data class HeroDto(
     @field:[NotBlank Size(min = 3, max = 30)]
     val name: String = "",
 
-    val createdBy: String?,
+    val createdBy: String? = "",
 
-    val createdDate: LocalDateTime?,
+    val createdDate: LocalDateTime? = null,
 
     val id: Long? = null
 )
