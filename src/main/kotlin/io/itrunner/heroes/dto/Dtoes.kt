@@ -1,6 +1,7 @@
 package io.itrunner.heroes.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
+import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
@@ -8,6 +9,10 @@ data class HeroDto(
     @Schema(name = "name", example = "Jason", required = true)
     @field:[NotBlank Size(min = 3, max = 30)]
     val name: String = "",
+
+    val createdBy: String?,
+
+    val createdDate: LocalDateTime?,
 
     val id: Long? = null
 )
