@@ -24,5 +24,5 @@ data class SecurityProperties(val ignorePaths: List<String>, val cors: Cors, val
         val allowedHeaders: List<String>
     )
 
-    data class Jwt(val header: String, val secret: String, val expiration: Long, val issuer: String)
+    data class Jwt(val secret: String, val expiration: Long, val issuer: String)
 }

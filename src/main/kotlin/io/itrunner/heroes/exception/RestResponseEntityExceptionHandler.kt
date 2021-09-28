@@ -1,11 +1,11 @@
 package io.itrunner.heroes.exception
 
+import io.itrunner.heroes.extension.Messages
 import org.springframework.core.NestedExceptionUtils.getMostSpecificCause
-import org.springframework.dao.DataAccessException
-import org.springframework.dao.DuplicateKeyException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -14,21 +14,19 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.persistence.EntityNotFoundException
 
 @ControllerAdvice(basePackages = ["io.itrunner.heroes.controller"])
-class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
+class RestResponseEntityExceptionHandler(private val messages: Messages) : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(
         EntityNotFoundException::class,
-        DuplicateKeyException::class,
-        DataAccessException::class,
+        BadCredentialsException::class,
         Exception::class
     )
     fun handleAllException(e: Exception): ResponseEntity<Any> {
         logger.error(e.message, e)
 
         return when (e) {
-            is EntityNotFoundException -> notFound(e.simpleName(), e.message)
-            is DuplicateKeyException -> badRequest(e.simpleName(), e.message)
-            is DataAccessException -> badRequest(e.mostSpecificSimpleName(), e.mostSpecificMessage())
+            is EntityNotFoundException -> notFound(e.simpleName(), messages.getMessage("error.entityNotFound"))
+            is BadCredentialsException -> badRequest(e.simpleName(), messages.getMessage("error.badCredentials"))
             else -> badRequest(e.mostSpecificSimpleName(), e.mostSpecificMessage())
         }
     }

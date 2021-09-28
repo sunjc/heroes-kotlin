@@ -36,9 +36,10 @@ class HeroesApplicationTests(@Autowired val restTemplate: TestRestTemplate) {
 
     @Test
     fun `login failed`() {
-        val request = AuthenticationRequest("admin", "111111")
-        val response = restTemplate.postForEntity("/api/auth", request, HttpEntity::class.java)
-        assertThat(response.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
+        val request = AuthenticationRequest("admin", "wrong-password")
+        val response = restTemplate.postForEntity("/api/auth", request, ErrorMessage::class.java)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        assertThat(response.body?.error).isEqualTo("BadCredentialsException")
     }
 
     @Test

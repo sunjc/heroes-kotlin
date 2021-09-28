@@ -14,23 +14,20 @@ class AuthenticationTokenFilter : OncePerRequestFilter() {
     @Autowired
     private lateinit var jwtService: JwtService
 
-    @Autowired
-    private lateinit var securityProperties: SecurityProperties
-
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        var authToken = request.getHeader(securityProperties.jwt.header)
+        val authorizationHeader = request.getHeader("Authorization")
 
-        if (authToken != null && authToken.startsWith("Bearer ")) {
-            authToken = authToken.substring(7)
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            val authToken = authorizationHeader.substring(7)
             try {
                 val user = jwtService.verify(authToken)
 
                 if (SecurityContextHolder.getContext().authentication == null) {
-                    logger.info("checking authentication for user " + user.username)
+                    logger.debug("checking authentication for user " + user.username)
 
                     val authentication = UsernamePasswordAuthenticationToken(user.username, "N/A", user.authorities)
                     authentication.details = WebAuthenticationDetailsSource().buildDetails(request)

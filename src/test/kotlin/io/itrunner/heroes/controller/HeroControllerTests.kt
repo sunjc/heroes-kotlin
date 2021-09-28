@@ -31,7 +31,7 @@ class HeroControllerTests(@Autowired val mockMvc: MockMvc) {
             .andExpect(content().json("{'id':1, 'name':'Jack'}"))
 
         // update hero
-        hero = HeroDto("Jacky", 1)
+        hero = HeroDto(name = "Jacky", id = 1)
         mockMvc.perform(
             put("/api/heroes").content(asJson(hero)).contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
